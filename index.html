@@ -1,0 +1,180 @@
+<!-- <html> -->
+<!--   <head> -->
+<!--     <link href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css' rel='stylesheet'> -->
+<!--     <title>Hello Vue</title> </head> -->
+<!--   <body> -->
+<!--  -->
+<!--     <div id='app'> -->
+<!--       <div class='container'> -->
+<!--         <h1>Let's hear some stories!</h1> -->
+<!--         <ul class='list&#45;group'> -->
+<!--           <story v&#45;for='story in stories' :story='story' :favorite='favorite' :key='story'></story> -->
+<!--         </ul> -->
+<!--         <pre>{{ $data }}</pre> -->
+<!--       </div> -->
+<!--     </div> -->
+<!--  -->
+<!--     <template id='story&#45;template'> -->
+<!--       <li class='list&#45;group&#45;item'> -->
+<!--         {{ story.writer }} said "{{ story.plot }}". -->
+<!--         <button type='button' v&#45;show='!story.voted' @click='upvote' class='btn btn&#45;default'>Upvote</button> -->
+<!--         <button type='button' v&#45;show='!isFavorite' @click='setFavorite' class='btn btn&#45;primary'>Favorite</button> -->
+<!--         <span v&#45;show='isFavorite' class='glyphicon glyphicon&#45;star pull&#45;right' aria&#45;hidden='true'></span> -->
+<!--       </li> -->
+<!--     </template> -->
+<!--   </body> -->
+<!--  -->
+<!--   <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.3.4/vue.js"></script> -->
+<!--   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.16.4/lodash.js"></script> -->
+<!--  -->
+<!--   <script type="text/javascript"> -->
+<!--     Vue.component('story', { -->
+<!--       template: '#story&#45;template', -->
+<!--       props: [ 'story', 'favorite' ], -->
+<!--       methods: { -->
+<!--         upvote: function(){ -->
+<!--           this.story.upvotes += 1; -->
+<!--           this.story.voted = true; -->
+<!--         }, -->
+<!--         setFavorite: function(){ -->
+<!--           this.favorite = this.story; -->
+<!--         } -->
+<!--       }, -->
+<!--       computed: { -->
+<!--         isFavorite: function(){ -->
+<!--           return this.story == this.favorite; -->
+<!--         } -->
+<!--       } -->
+<!--     }); -->
+<!--  -->
+<!--     new Vue({ -->
+<!--       el: '#app', -->
+<!--       data: { -->
+<!--         stories: [ -->
+<!--           { -->
+<!--             plot: 'My horse is amazing.', -->
+<!--             writer: 'Mr. Weebl', -->
+<!--             upvotes: 28, -->
+<!--             voted: false -->
+<!--           }, -->
+<!--           { -->
+<!--             plot: 'Narwhals invented Shish Kebab.', -->
+<!--             writer: 'Mr. Weebl', -->
+<!--             upvotes: 8, -->
+<!--             voted: false -->
+<!--           }, -->
+<!--           { -->
+<!--             plot: 'The dark side of the Force is stronger.', -->
+<!--             writer: 'Dark Vader', -->
+<!--             upvotes: 49, -->
+<!--             voted: false -->
+<!--           }, -->
+<!--           { -->
+<!--             plot: 'One does not simply walk into Mordor.', -->
+<!--             writer: 'Boromir', -->
+<!--             upvotes: 74, -->
+<!--             voted: false -->
+<!--           } -->
+<!--         ], -->
+<!--         favorite: {} -->
+<!--       } -->
+<!--     }); -->
+<!--   </script> -->
+<!-- </html> -->
+
+<html>
+  <head>
+    <title>Emit and Listen</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
+  </head>
+  <body>
+    <div class='container text-center'>
+      <h1>Food Battle</h1>
+      <p style='font-size: 140px'>
+        {{ votes.count }}
+      </p>
+      <button class='btn btn-danger'  @click='resetAllVotes()'>Reset votes</button>
+      <button class='btn btn-default' @click='stop()'>Stop votes</button>
+      <hr />
+
+      <div class='row'>
+        <food @voted='countVote' name='Cheeseburger'></food>
+        <food @voted='countVote' name='Double Bacon Burger'></food>
+        <food @voted='countVote' name='Rodeo Burger'></food>
+      </div>
+      <hr />
+
+      <h1>Log:</h1>
+      <ul class='list-group'>
+        <li class='list-group-item' v-for='vote in votes.log' v-bind:vote='vote' v-bind:key='vote'>
+          {{ vote }}
+        </li>
+      </ul>
+    </div>
+
+    <template id='food-tmpl'>
+      <div class='text-center col-lg-4'>
+        <p style='font-size: 40px;'>{{ votes }}</p>
+        <button class='btn btn-default' @click='vote()'>{{ name }}</button>
+      </div>
+    </template>
+
+  </body>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.3.4/vue.js"></script>
+  <script type='text/javascript'>
+    var bus = new Vue();
+
+    Vue.component('food', {
+      template: '#food-tmpl',
+      props: [ 'name' ],
+      data: function(){
+        return {
+          votes: 0
+        }
+      },
+      methods: {
+        vote: function(){
+          var food = this.name;
+          this.votes++;
+          this.$emit( 'voted', food );
+        },
+        resetFoodCount: function(){
+          this.votes = 0;
+        }
+      },
+      created(){
+        bus.$on( 'resetAllVotes', this.resetFoodCount );
+      }
+    });
+
+    new Vue({
+      el: '.container',
+      data: {
+        votes: {
+          count: 0,
+          log: []
+        }
+      },
+      methods: {
+        countVote: function( food ){
+          this.votes.count++;
+          this.votes.log.push( food + ' received a vote.');
+        },
+        resetAllVotes: function(){
+          this.votes = {
+            count: 0,
+            log: []
+          }
+          bus.$emit( 'resetAllVotes' );
+        },
+        stop: function(){
+          // not working
+          bus.$off([ 'voted' ]);
+        }
+      },
+      created(){
+        bus.$on( 'voted', this.countVote );
+      }
+    });
+  </script>
+</html>
