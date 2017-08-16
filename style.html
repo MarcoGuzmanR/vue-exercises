@@ -1,0 +1,80 @@
+<!-- <html> -->
+<!--   <head> -->
+<!--     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet"> -->
+<!--     <title>Hello Vue</title> -->
+<!--   </head> -->
+<!--   <body class="container"> -->
+<!--     <div id="app"> -->
+<!--       <ul> -->
+<!--         <li :class="{'completed' : task.done}" :style="styleObject" v&#45;for="task in tasks" v&#45;bind:key='task'> -->
+<!--           {{ task.body }} -->
+<!--           <button @click="completeTask(task)" class="btn"> -->
+<!--             Just do it! -->
+<!--           </button> -->
+<!--         </li> -->
+<!--       </ul> -->
+<!--     </div> -->
+<!--   </body> -->
+<!--  -->
+<!--   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.3.4/vue.js"></script> -->
+<!--  -->
+<!--   <script type="text/javascript"> -->
+<!--     new Vue({ -->
+<!--       el: '#app', -->
+<!--       data: { -->
+<!--         tasks: [ -->
+<!--           { body: "Feed the horses", done: true }, -->
+<!--           { body: "Wash armor", done: true }, -->
+<!--           { body: "Sharp sword", done: false } -->
+<!--         ], -->
+<!--         styleObject: { -->
+<!--           fontSize: '25px' -->
+<!--         } -->
+<!--       }, -->
+<!--       methods: { -->
+<!--         completeTask: function( task ) { -->
+<!--           task.done = !task.done; -->
+<!--         } -->
+<!--       }, -->
+<!--     }); -->
+<!--   </script> -->
+<!--  -->
+<!--   <style type="text/css"> -->
+<!--     .completed { -->
+<!--       text&#45;decoration: line&#45;through; -->
+<!--     } -->
+<!--   </style> -->
+<!-- </html> -->
+<html>
+  <head>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
+    <title>Paint Me</title>
+  </head>
+  <body>
+    <div id="app">
+      <div class='container' v-bind:style='colorSelected'>
+        <input type='color' v-model='colorSelected.backgroundColor' />
+        <input type='text' v-model='colorSelected.backgroundColor' />
+      </div>
+    </div>
+  </body>
+
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.3.4/vue.js"></script>
+
+  <script type="text/javascript">
+    new Vue({
+      el: '#app',
+      data: {
+        colorSelected: {
+          backgroundColor: '#ff0000'
+        }
+      }
+    });
+  </script>
+
+  <style type="text/css">
+    .completed {
+      text-decoration: line-through;
+    }
+  </style>
+</html>
