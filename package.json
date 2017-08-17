@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/MarcoGuzmanR/vue-exercises#readme",
   "devDependencies": {
+    "body-parser": "^1.17.2",
     "express": "^4.15.4"
   }
 }
