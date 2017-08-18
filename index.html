@@ -6,22 +6,51 @@
 
     <div id='app'>
       <div class='container'>
-        <h1>Let's hear some stories!</h1>
-        <ul class='list-group'>
-          <story v-for='story in stories' :story='story' :key='story'></story>
-        </ul>
-        <pre>{{ $data }}</pre>
+        <h1>Stories</h1>
+        <table class='table table-striped'>
+          <tr>
+            <th>#</th>
+            <th>Plot</th>
+            <th>Writer</th>
+            <th>Upvotes</th>
+            <th>Action</th>
+          </tr>
+          <tr v-for='story in stories' is='story' :story='story' :key='story'></tr>
+        </table>
       </div>
     </div>
 
-    <template id='story-template'>
-      <li class='list-group-item'>
-        {{ story.writer }} said "{{ story.plot }}".
-        <button type='button' @click='upvote' class='btn btn-default'>Upvote</button>
+    <template id='template-story-raw'>
+      <tr>
+        <td>
+          {{ story.id }}
+        </td>
+        <td>
+          <span>{{ story.plot }}</span>
+        </td>
+        <td>
+          <span>{{ story.writer }}</spanid>
+        </td>
+        <td>
+          {{ story.upvotes }}
+        </td>
+        <td>
+          <div class='btn-group'>
+            <button @click='upvoteStory(story)' class='btn btn-primary'>Upvote</button>
+            <button @click='deleteStory(story)' class='btn btn-danger'>Delete</button>
+          </div>
+        </td>
+      </tr>
+    </template>
+
+    <!-- <template id='story&#45;template'> -->
+    <!--   <li class='list&#45;group&#45;item'> -->
+    <!--     {{ story.writer }} said "{{ story.plot }}". -->
+    <!--     <button type='button' @click='upvote' class='btn btn&#45;default'>Upvote</button> -->
         <!-- <button type='button' v&#45;show='!isFavorite' @click='setFavorite' class='btn btn&#45;primary'>Favorite</button> -->
         <!-- <span v&#45;show='isFavorite' class='glyphicon glyphicon&#45;star pull&#45;right' aria&#45;hidden='true'></span> -->
-      </li>
-    </template>
+    <!--   </li> -->
+    <!-- </template> -->
   </body>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.3.4/vue.js"></script>
@@ -29,12 +58,25 @@
 
   <script type="text/javascript">
     Vue.component('story', {
-      template: '#story-template',
+      template: '#template-story-raw',
       props: [ 'story' ],
       methods: {
-        upvote: function(){
-          this.story.upvotes += 1;
-          this.story.voted = true;
+        upvoteStory: function( story ){
+          story.upvotes++;
+          $.ajax({
+            url: '/api/stories/' + story.id,
+            type: 'PUT',
+            data: story
+          });
+        },
+        deleteStory: function( story ){
+          var index = vm.stories.indexOf( story );
+          vm.stories.splice( index, 1 );
+
+          $.ajax({
+            url: '/api/stories/' + story.id,
+            type: 'DELETE'
+          });
         }
       }
     });

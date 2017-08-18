@@ -42,17 +42,16 @@ router.post('/api/stories', ( req, res ) => {
 
 // Update a story
 router.put('/api/stories/:id', ( req, res ) => {
-  // let book =
-  //   books.allBooks.find( book => book.id === parseInt( req.params.id ) );
-  //
-  // book.name          = req.body.name;
-  // book.author        = req.body.author;
-  // book.category_id   = req.body.category_id;
-  // book.available     = req.body.available;
-  // book.publishedDate = new Date( req.body.publishedDate ).getTime();
-  // book.user          = req.body.user;
-  //
-  // res.json( { books: books.allBooks });
+  let story =
+    stories.allStories.find( story => story.id === parseInt( req.params.id ) );
+
+  story.plot       = req.body.plot;
+  story.upvotes    = req.body.upvotes;
+  story.writer     = req.body.writer;
+  story.created_at = req.body.created_at;
+  story.updated_at = req.body.updated_at;
+
+  res.json( { stories: stories.allStories });
 });
 
 // Delete a story
